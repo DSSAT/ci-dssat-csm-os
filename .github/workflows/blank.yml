@@ -61,6 +61,6 @@ jobs:
         run: |
           cd /Applications/DSSAT48/B
           cp /Applications/DSSAT48/BatchFiles/All.L48 .
-          /Applications/DSSAT48/dscsm048 B All.L48# This is a basic workflow to help you get started with Actions
+          /Applications/DSSAT48/dscsm048 B All.L48
 
 
