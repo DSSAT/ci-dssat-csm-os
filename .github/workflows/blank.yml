@@ -1,31 +1,67 @@
-# This is a basic workflow to help you get started with Actions
+name: CI Build e Run DSSAT-CSM
 
-name: CI
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "develop" branch
-  push: 
-   branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-          # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-      # Runs a single command using the runners shell
-      - name: Roda a imagem 
-        run: thiagoferreira53/ci-dssat-csm-os:latest
+  push:
+    workflow_dispatch:
+    branches:
+      - main
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencias
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          sudo apt-get update
+          sudo apt-get install -y git ca-certificates gfortran cmake
+
+      - name: Clonar repositórios
+        run: |
+          git clone https://github.com/DSSAT/CI-dssat-csm-os.git
+          git clone https://github.com/DSSAT/dssat-csm-data.git
+
+      - name: Compilar
+        run: |
+          mkdir dssat-csm-os/build
+          cd dssat-csm-os/build
+          cmake -DCMAKE_INSTALL_PREFIX=/Applications/DSSAT48 ..
+          make
+          make install
+
+      - name: Instalar
+        run: |
+          cd dssat-csm-data
+          git clone https://github.com/DSSAT/dssat-csm-data.git
+
+      - name: Copiar arquivos
+        run: |
+          mkdir -p /Applications
+          cp -r dssat-csm-os/build/* /Applications
+          cp -r dssat-csm-data/* /Applications/DSSAT48
+
+      - name: Modificar arquivos
+        run: |
+          sed -E 's|(DSSAT48/)([^/])([^/]*)|\1\U\2\L\3|' /Applications/DSSAT48/BatchFiles/All.L48 > /Applications/DSSAT48/BatchFiles/All.L48
+          sed -i 's/Bambaragroundnut/BambaraGroundNut/g' /Applications/DSSAT48/BatchFiles/All.L48
+          sed -i 's/Bellpepper/BellPepper/g' /Applications/DSSAT48/BatchFiles/All.L48
+          sed -i 's/Greenbean/GreenBean/g' /Applications/DSSAT48/BatchFiles/All.L48
+          sed -i 's/Pearlmillet/PearlMillet/g' /Applications/DSSAT48/BatchFiles/All.L48
+          sed -i 's/Pineapple/PineApple/g' /Applications/DSSAT48/BatchFiles/All.L48
+          sed -i 's/Sweetcorn/SweetCorn/g' /Applications/DSSAT48/BatchFiles/All.L48
+
+      - name: Run A
+        run: |
+          cd /Applications/DSSAT48/A
+          cp /Applications/DSSAT48/BatchFiles/All.L48 .
+          /Applications/DSSAT48/dscsm048 B All.L48
+
+      - name: Run B
+        run: |
+          cd /Applications/DSSAT48/B
+          cp /Applications/DSSAT48/BatchFiles/All.L48 .
+          /Applications/DSSAT48/dscsm048 B All.L48# This is a basic workflow to help you get started with Actions
+
+
