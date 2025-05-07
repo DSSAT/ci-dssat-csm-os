@@ -24,4 +24,5 @@ jobs:
       # Executar o container Docker com a imagem especificada
       - name: Run Docker container
         run: |
-          docker run --rm --name say-hello-container thiagoferreira53/ci-dssat-csm-os:latest /bin/bash -c "echo Hello, World!"
+         docker run --platform linux/amd64 thiagoferreira53/ci-dssat-csm-os:latest /bin/bash -c "your_command_here"
+         
