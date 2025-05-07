@@ -1,3 +1,7 @@
+jobs:
+
+
+
 # Nome do workflow do GitHub Actions
 name: Teste CIDSSAT 
 
@@ -8,21 +12,15 @@ on:
       - circleci-project-setup
     # Definir um trabalho (job) dentro do workflow
 jobs:
-  say-hello:
-    # Definir o ambiente de execução do job
-    runs-on: ubuntu-latest
-    # Definir os passos do job
+  build:
+    runs-on: ubuntu-22.04
     steps:
-      # Fazer o checkout do repositório
       - name: Checkout code
         uses: actions/checkout@v2
-
-      # Configurar o Docker
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      # Executar o container Docker com a imagem especificada
-      - name: Run Docker container
+      - name: Set up ARM64 emulator
         run: |
-         docker run --platform linux/amd64 thiagoferreira53/ci-dssat-csm-os:latest /bin/bash -c "your_command_here"
-         
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+      - name: Run Docker container
+        run: docker run --platform linux/arm64/v8 thiagoferreira53/ci-dssat-csm-os:latest
+        
