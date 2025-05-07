@@ -20,6 +20,7 @@ jobs:
       - name: Clonar repositórios
         run: |
           git clone https://github.com/DSSAT/CI-dssat-csm-os.git
+          git clone https://github.com/DSSAT/dssat-csm-os
           git clone https://github.com/DSSAT/dssat-csm-data.git
 
       - name: Compilar
