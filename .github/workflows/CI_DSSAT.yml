@@ -14,7 +14,6 @@ jobs:
 
       - name: Install dependencias
         run: |
-          export DSSAT_HOME="/Applications/DSSAT48/"
           sudo apt-get update
           sudo apt-get install -y git ca-certificates gfortran cmake
 
@@ -45,11 +44,13 @@ jobs:
 
       - name: Run workA
         run: |
+          export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/workA
           ./dscsm048 B ../../BatchFiles/All.L48
 
       - name: Run workB
         run: |
+          export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/workB
           ./dscsm048 B ../../BatchFiles/All.L48
 
