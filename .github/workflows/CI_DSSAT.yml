@@ -35,7 +35,7 @@ jobs:
           mkdir -p ci-dssat-csm-os/build
           cd ci-dssat-csm-os/build
           cmake -DCMAKE_INSTALL_PREFIX=/Applications/DSSAT48/ ..
-          make install
+          sudo make install
 
       - name: Copy executable
         run: |
