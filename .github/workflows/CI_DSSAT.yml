@@ -27,7 +27,7 @@ jobs:
           sudo mkdir -p /Applications/DSSAT48/
           sudo mkdir -p /Applications/DSSAT48/CTWork/workA
           sudo mkdir -p /Applications/DSSAT48/CTWork/workB
-          sudo chmod -R 755 /Applications/DSSAT48/
+          sudo chmod -R 777 /Applications/DSSAT48/
           cp -r dssat-csm-data/* /Applications/DSSAT48/
           
       - name: Compile
