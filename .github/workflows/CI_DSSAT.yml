@@ -17,51 +17,42 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y git ca-certificates gfortran cmake
 
-      - name: Clonar repositórios
+      - name: Clone Repositories
         run: |
-          git clone https://github.com/DSSAT/CI-dssat-csm-os.git
-          git clone https://github.com/DSSAT/dssat-csm-os
-          git clone https://github.com/DSSAT/dssat-csm-data.git
+          git clone -b develop https://github.com/DSSAT/ci-dssat-csm-os.git
+          git clone -b develop https://github.com/DSSAT/dssat-csm-data.git
 
-      - name: Compilar
+      - name: DSSAT data directory
         run: |
-          mkdir dssat-csm-os/build
-          cd dssat-csm-os/build
-          cmake -DCMAKE_INSTALL_PREFIX=/Applications/DSSAT48 ..
-          make
+          mkdir -p /Applications/DSSAT48/
+          mkdir -p /Applications/DSSAT48/CTWork/workA
+          mkdir -p /Applications/DSSAT48/CTWork/workB
+          cp -r dssat-csm-data/* /Applications/DSSAT48/
+          
+      - name: Compile
+        run: |
+          mkdir -p ci-dssat-csm-os/build
+          cd ci-dssat-csm-os/build
+          cmake -DCMAKE_INSTALL_PREFIX=/Applications/DSSAT48/ ..
           make install
 
-      - name: Instalar
+      - name: Copy executable
         run: |
-          cd dssat-csm-data
-          git clone https://github.com/DSSAT/dssat-csm-data.git
+          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workA/
+          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workB/
 
-      - name: Copiar arquivos
+      - name: Run workA
         run: |
-          mkdir -p /Applications
-          cp -r dssat-csm-os/build/* /Applications
-          cp -r dssat-csm-data/* /Applications/DSSAT48
+          cd /Applications/DSSAT48/CTWork/workA
+          ./dscsm048 B ../../BatchFiles/All.L48
 
-      - name: Modificar arquivos
+      - name: Run workB
         run: |
-          sed -E 's|(DSSAT48/)([^/])([^/]*)|\1\U\2\L\3|' /Applications/DSSAT48/BatchFiles/All.L48 > /Applications/DSSAT48/BatchFiles/All.L48
-          sed -i 's/Bambaragroundnut/BambaraGroundNut/g' /Applications/DSSAT48/BatchFiles/All.L48
-          sed -i 's/Bellpepper/BellPepper/g' /Applications/DSSAT48/BatchFiles/All.L48
-          sed -i 's/Greenbean/GreenBean/g' /Applications/DSSAT48/BatchFiles/All.L48
-          sed -i 's/Pearlmillet/PearlMillet/g' /Applications/DSSAT48/BatchFiles/All.L48
-          sed -i 's/Pineapple/PineApple/g' /Applications/DSSAT48/BatchFiles/All.L48
-          sed -i 's/Sweetcorn/SweetCorn/g' /Applications/DSSAT48/BatchFiles/All.L48
+          cd /Applications/DSSAT48/CTWork/workB
+          ./dscsm048 B ../../BatchFiles/All.L48
 
-      - name: Run A
+
+      - name: CropTest
         run: |
-          cd /Applications/DSSAT48/A
-          cp /Applications/DSSAT48/BatchFiles/All.L48 .
-          /Applications/DSSAT48/dscsm048 B All.L48
-
-      - name: Run B
-        run: |
-          cd /Applications/DSSAT48/B
-          cp /Applications/DSSAT48/BatchFiles/All.L48 .
-          /Applications/DSSAT48/dscsm048 B All.L48
-
+          #PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
 
