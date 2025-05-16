@@ -54,7 +54,6 @@ jobs:
           cd /Applications/DSSAT48/CTWork/workB
           ./dscsm048 B ../../BatchFiles/All.L48
 
-
 #      - name: CropTest
 #        run: |
 #          #PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
@@ -70,3 +69,7 @@ jobs:
       - name: List installed packages
         run: |
           Rscript -e 'installed.packages()'
+      - name: Run RCroptest
+        run: |
+          Rscript -e "library(RCroptest); source('C:/Users/zanat/Downloads/CI.R')"
+         
