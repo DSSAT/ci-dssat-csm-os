@@ -54,9 +54,9 @@ jobs:
           cd /Applications/DSSAT48/CTWork/workB
           ./dscsm048 B ../../BatchFiles/All.L48
 
+ #        PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
       - name: CropTest
         run: |
- #        PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
          cd /Applications/DSSAT48/CTWork/
          diff -i workA/Summary.OUT workB/Summary.OUT
 
