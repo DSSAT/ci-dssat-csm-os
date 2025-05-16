@@ -56,7 +56,7 @@ jobs:
 
       - name: CropTest
         run: |
-          #PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
+ #        PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
          cd /Applications/DSSAT48/CTWork/
          diff -i workA/Summary.OUT workB/Summary.OUT
 
