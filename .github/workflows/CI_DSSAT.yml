@@ -66,10 +66,22 @@ jobs:
         run: |
           R -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
 
-      - name: List installed packages
+ #     - name: List installed packages
+ #       run: |
+ #         Rscript -e 'installed.packages()'
+ #     - name: Run RCroptest
+ #       run: |
+ #         Rscript -e "library(RCroptest); source('C:/Users/zanat/Downloads/CI.R')"
+      - name: Run RCroptest script
         run: |
-          Rscript -e 'installed.packages()'
-      - name: Run RCroptest
-        run: |
-          Rscript -e "library(RCroptest); source('C:/Users/zanat/Downloads/CI.R')"
-         
+          cd /Applications/DSSAT48/CTWork/
+          R -e "library(RCroptest);
+              result = testCI('workA/Summary.out',
+                              'workB/Summary.out', 
+                              thNumeric=2, thDate=0
+                             );
+              if (result == 0) {
+                result
+              } else {
+                stop('There are differences between the models')
+              }"
