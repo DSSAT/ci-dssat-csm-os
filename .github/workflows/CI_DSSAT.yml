@@ -54,34 +54,34 @@ jobs:
           cd /Applications/DSSAT48/CTWork/workB
           ./dscsm048 B ../../BatchFiles/All.L48
 
-#      - name: CropTest
-#        run: |
-#          #PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
-#         cd /Applications/DSSAT48/CTWork/
-#         diff workA/Summary.OUT workB/Summary.OUT
-
-      - name: Install R Package RCroptest
-        uses: r-lib/actions/setup-r@v2
-      - name: Install package
+      - name: CropTest
         run: |
-          R -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
+          #PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
+         cd /Applications/DSSAT48/CTWork/
+         diff -i workA/Summary.OUT workB/Summary.OUT
 
+ #      - name: Install R Package RCroptest
+ #        uses: r-lib/actions/setup-r@v2
+ #      - name: Install package
+ #        run: |
+ #          R -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
+ #
  #     - name: List installed packages
  #       run: |
  #         Rscript -e 'installed.packages()'
  #     - name: Run RCroptest
  #       run: |
  #         Rscript -e "library(RCroptest); source('C:/Users/zanat/Downloads/CI.R')"
-      - name: Run RCroptest script
-        run: |
-          cd /Applications/DSSAT48/CTWork/
-          R -e "library(RCroptest);
-              result = testCI('workA/Summary.out',
-                              'workB/Summary.out', 
-                              thNumeric=2, thDate=0
-                             );
-              if (result == 0) {
-                result
-              } else {
-                stop('There are differences between the models')
-              }"
+ #     - name: Run RCroptest script
+ #       run: |
+ #         cd /Applications/DSSAT48/CTWork/
+ #         R -e "library(RCroptest);
+ #             result = testCI('workA/Summary.out',
+ #                             'workB/Summary.out', 
+ #                             thNumeric=2, thDate=0
+ #                            );
+ #             if (result == 0) {
+ #               result
+ #             } else {
+ #               stop('There are differences between the models')
+ #             }"
