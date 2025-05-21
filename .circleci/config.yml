@@ -6,7 +6,7 @@ on:
       - circleci-project-setup
 
 jobs:
-  build-and-run:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
