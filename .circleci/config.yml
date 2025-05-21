@@ -1,31 +1,83 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/configuration-reference
-version: 2.1
+name: CI Build e Run DSSAT-CSM test
+   
+on:
+  push:
+    branches:
+      - develop
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
-    docker:
-      # Specify the version you desire here
-      # See: https://circleci.com/developer/images/image/cimg/base
-      # - image: cimg/base:current
-      - image: thiagoferreira53/ci-dssat-csm-os:latest
-    # Add steps to the job
-    # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
+  build-and-run:
+    runs-on: ubuntu-latest
     steps:
-      # Checkout the code as the first step.
-      - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+      - name: Checkout
+        uses: actions/checkout@v2
 
-# Orchestrate jobs using workflows
-# See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
-workflows:
-  say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
-    jobs:
-      - say-hello
+      - name: Install dependencias
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git ca-certificates gfortran cmake
+
+      - name: Clone Repositories
+        run: |
+          git clone -b develop https://github.com/DSSAT/ci-dssat-csm-os.git
+          git clone -b develop https://github.com/DSSAT/dssat-csm-data.git
+
+      - name: DSSAT data directory
+        run: |
+          sudo mkdir -p /Applications/DSSAT48/
+          sudo mkdir -p /Applications/DSSAT48/CTWork/workA
+          sudo mkdir -p /Applications/DSSAT48/CTWork/workB
+          sudo chmod -R 777 /Applications/DSSAT48/
+          cp -r dssat-csm-data/* /Applications/DSSAT48/
+          
+      - name: Compile
+        run: |
+          mkdir -p ci-dssat-csm-os/build
+          cd ci-dssat-csm-os/build
+          cmake -DCMAKE_INSTALL_PREFIX=/Applications/DSSAT48/ ..
+          sudo make install
+
+      - name: Copy executable
+        run: |
+          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workA/
+          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workB/
+
+      - name: Run workA
+        run: |
+          export DSSAT_HOME="/Applications/DSSAT48/"
+          cd /Applications/DSSAT48/CTWork/workA
+          ./dscsm048 B ../../BatchFiles/All.L48
+
+      - name: Run workB
+        run: |
+          export DSSAT_HOME="/Applications/DSSAT48/"
+          cd /Applications/DSSAT48/CTWork/workB
+          ./dscsm048 B ../../BatchFiles/All.L48
+
+ #        PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
+ #     - name: CropTest
+ #       run: |
+ #        cd /Applications/DSSAT48/CTWork/
+ #        diff -i workA/Summary.OUT workB/Summary.OUT
+
+      - name: Install R Package RCroptest
+        uses: r-lib/actions/setup-r@v2
+      
+      - name: Install package
+        run: |
+           R -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
+       
+      - name: Run RCroptest
+        run: |
+          export DSSAT_HOME="/Applications/DSSAT48/"
+          cd /Applications/DSSAT48/CTWork/
+          R -e "library(RCroptest);
+              result = testCI('/Applications/DSSAT48/CTWork/workA/Summary.out',
+                              '/Applications/DSSAT48/CTWork/workB/Summary.out', 
+                              thNumeric=2, thDate=0
+                             );
+              if (result == 0) {
+                result
+              } else {
+                stop('There are differences between the models')
+              }"
