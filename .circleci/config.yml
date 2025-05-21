@@ -3,7 +3,7 @@ name: CI Build e Run DSSAT-CSM test
 on:
   push:
     branches:
-      - develop
+      - circleci-project-setup
 
 jobs:
   build-and-run:
