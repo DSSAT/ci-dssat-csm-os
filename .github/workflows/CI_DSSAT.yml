@@ -73,8 +73,8 @@ jobs:
        
       - name: Run RCroptest
         run: |
-#          export DSSAT_HOME="/Applications/DSSAT48/"
-#          cd /Applications/DSSAT48/CTWork/
+          export DSSAT_HOME="/Applications/DSSAT48/"
+          cd /Applications/DSSAT48/CTWork/
           R -e "library(RCroptest);
               result = testCI('/Applications/DSSAT48/CTWork/workA/Summary.out',
                               '/Applications/DSSAT48/CTWork/workB/Summary.out', 
