@@ -66,6 +66,10 @@ jobs:
       - name: Install package
         run: |
            R -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
+
+      - name: Verify installation
+        run: |
+           R -e "print('Installed packages:'); print(installed.packages())"
        
       - name: Run RCroptest
         run: |
