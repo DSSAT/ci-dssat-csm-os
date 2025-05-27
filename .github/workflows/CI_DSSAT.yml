@@ -69,20 +69,20 @@ jobs:
       
       - name: Install package
         run: |
-           dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
-           .libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
-           R -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
+           Rscript -e 'dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)'
+           Rscript -e '.libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))'
+           Rscript -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
 
       - name: Verify installation
         run: |
-           .libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
-           R -e "print('Installed packages:'); print(installed.packages())"
+           Rscript -e ' .libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))'
+           Rscript -e "print('Installed packages:'); print(installed.packages())"
        
       - name: Run RCroptest
         run: |
           export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/
-          R -e "library(RCroptest);
+          Rscript -e "library(RCroptest);
               result = testCI('/Applications/DSSAT48/CTWork/workA/Summary.out',
                               '/Applications/DSSAT48/CTWork/workB/Summary.out', 
                               thNumeric=2, thDate=0
