@@ -21,42 +21,42 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y git ca-certificates gfortran cmake
 
-#      - name: Clone Repositories
-#        run: |
-#          git clone -b develop https://github.com/DSSAT/ci-dssat-csm-os.git
-#          git clone -b develop https://github.com/DSSAT/dssat-csm-data.git
-#
-#      - name: DSSAT data directory
-#        run: |
-#          sudo mkdir -p /Applications/DSSAT48/
-#          sudo mkdir -p /Applications/DSSAT48/CTWork/workA
-#          sudo mkdir -p /Applications/DSSAT48/CTWork/workB
-#          sudo chmod -R 777 /Applications/DSSAT48/
-#          cp -r dssat-csm-data/* /Applications/DSSAT48/
-#          
-#      - name: Compile
-#        run: |
-#          mkdir -p ci-dssat-csm-os/build
-#          cd ci-dssat-csm-os/build
-#          cmake -DCMAKE_INSTALL_PREFIX=/Applications/DSSAT48/ ..
-#          sudo make install
-#
-#      - name: Copy executable
-#        run: |
-#          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workA/
-#          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workB/
-#
-#      - name: Run workA
-#        run: |
-#          export DSSAT_HOME="/Applications/DSSAT48/"
-#          cd /Applications/DSSAT48/CTWork/workA
-#          ./dscsm048 B ../../BatchFiles/All.L48
-#
-#      - name: Run workB
-#        run: |
-#          export DSSAT_HOME="/Applications/DSSAT48/"
-#          cd /Applications/DSSAT48/CTWork/workB
-#          ./dscsm048 B ../../BatchFiles/All.L48
+      - name: Clone Repositories
+        run: |
+          git clone -b develop https://github.com/DSSAT/ci-dssat-csm-os.git
+          git clone -b develop https://github.com/DSSAT/dssat-csm-data.git
+
+      - name: DSSAT data directory
+        run: |
+          sudo mkdir -p /Applications/DSSAT48/
+          sudo mkdir -p /Applications/DSSAT48/CTWork/workA
+          sudo mkdir -p /Applications/DSSAT48/CTWork/workB
+          sudo chmod -R 777 /Applications/DSSAT48/
+          cp -r dssat-csm-data/* /Applications/DSSAT48/
+          
+      - name: Compile
+        run: |
+          mkdir -p ci-dssat-csm-os/build
+          cd ci-dssat-csm-os/build
+          cmake -DCMAKE_INSTALL_PREFIX=/Applications/DSSAT48/ ..
+          sudo make install
+
+      - name: Copy executable
+        run: |
+          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workA/
+          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workB/
+
+      - name: Run workA
+        run: |
+          export DSSAT_HOME="/Applications/DSSAT48/"
+          cd /Applications/DSSAT48/CTWork/workA
+          ./dscsm048 B ../../BatchFiles/All.L48
+
+      - name: Run workB
+        run: |
+          export DSSAT_HOME="/Applications/DSSAT48/"
+          cd /Applications/DSSAT48/CTWork/workB
+          ./dscsm048 B ../../BatchFiles/All.L48
 
  #        PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
  #     - name: CropTest
@@ -70,7 +70,7 @@ jobs:
       - name: Install package
         run: |
            Rscript -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
-           Rscript -e "install.packages('plumber', 'devtools')" 
+           Rscript -e "install.packages(c('plumber', 'devtools'))" 
            Rscript - e "install.packages(c('webutils', 'sodium'))"
            
       - name: Verify installation
