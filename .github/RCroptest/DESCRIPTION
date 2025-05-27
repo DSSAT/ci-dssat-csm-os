@@ -1,0 +1,24 @@
+Package: RCroptest
+Type: Package
+Title: API to Process and Analyze Croptest Comparison
+Version: 0.4.9
+Authors@R: c(
+              person("Marcio", "Nicolau", 
+                email = "marcio.nicolau@embrapa.br", 
+                role = c("aut", "cre")),
+              person("DSSAT", role = c("cph", "fnd"))
+          )
+Description: Provides a flexible API for files comparison. 
+  It's part of Croptest Desktop application.
+Depends: R (>= 3.6.0)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    dplyr,
+    plumber,
+    readr,       
+    stringi,
+    tidyr,
+    rlang,
+RoxygenNote: 7.1.1
