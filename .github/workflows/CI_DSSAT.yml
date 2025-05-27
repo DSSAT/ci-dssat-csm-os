@@ -9,8 +9,8 @@ jobs:
   build-and-run:
     runs-on: ubuntu-latest
 
-    env:
-       R_LIBS_USER: ~/R/library
+    # env:
+    #    R_LIBS_USER: ~/R/library
        
     steps:
       - name: Checkout 
@@ -69,13 +69,10 @@ jobs:
       
       - name: Install package
         run: |
-           Rscript -e 'dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)'
-           Rscript -e '.libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))'
            Rscript -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
 
       - name: Verify installation
         run: |
-           Rscript -e ' .libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))'
            Rscript -e "print('Installed packages:'); print(installed.packages())"
        
       - name: Run RCroptest
