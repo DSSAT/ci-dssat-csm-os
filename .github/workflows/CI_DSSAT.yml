@@ -70,7 +70,8 @@ jobs:
       - name: Install package
         run: |
            Rscript -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
-
+           Rscript -e "install.packages('plumber')" 
+           
       - name: Verify installation
         run: |
            Rscript -e "print('Installed packages:'); print(installed.packages())"
