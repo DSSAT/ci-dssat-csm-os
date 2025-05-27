@@ -80,8 +80,7 @@ jobs:
         run: |
           export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/
-          Rscript -e "library(devtools);
-              devtools::load_all('.github/RCroptest');
+          Rscript -e "install.packages(".github/RCroptest", repos = NULL, type = "source")
               result = testCI('/Applications/DSSAT48/CTWork/workA/Summary.out',
                               '/Applications/DSSAT48/CTWork/workB/Summary.out', 
                               thNumeric=2, thDate=0
