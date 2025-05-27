@@ -69,8 +69,9 @@ jobs:
            
       - name: Install package
         run: |
+          Rscript -e "install.packages('devtools', dependencies = TRUE)"
           Rscript -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
-          Rscript -e "install.packages(c('plumber', 'devtools', 'webutils', 'sodium'))"
+          Rscript -e "install.packages(c('plumber', 'webutils', 'sodium'))"
            
       - name: Verify installation
         run: |
@@ -80,7 +81,7 @@ jobs:
         run: |
           export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/
-          Rscript -e "devtools::load_all('.github/RCroptest');
+          Rscript -e "load_all('.github/RCroptest');
               result = testCI('/Applications/DSSAT48/CTWork/workA/Summary.out',
                               '/Applications/DSSAT48/CTWork/workB/Summary.out', 
                               thNumeric=2, thDate=0
