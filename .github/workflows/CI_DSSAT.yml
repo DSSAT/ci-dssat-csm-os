@@ -26,37 +26,37 @@ jobs:
           git clone -b develop https://github.com/DSSAT/ci-dssat-csm-os.git
           git clone -b develop https://github.com/DSSAT/dssat-csm-data.git
 
-#      - name: DSSAT data directory
-#        run: |
-#          sudo mkdir -p /Applications/DSSAT48/
-#          sudo mkdir -p /Applications/DSSAT48/CTWork/workA
-#          sudo mkdir -p /Applications/DSSAT48/CTWork/workB
-#          sudo chmod -R 777 /Applications/DSSAT48/
-#          cp -r dssat-csm-data/* /Applications/DSSAT48/
-#          
-#      - name: Compile
-#        run: |
-#          mkdir -p ci-dssat-csm-os/build
-#          cd ci-dssat-csm-os/build
-#          cmake -DCMAKE_INSTALL_PREFIX=/Applications/DSSAT48/ ..
-#          sudo make install
-#
-#      - name: Copy executable
-#        run: |
-#          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workA/
-#          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workB/
-#
-#      - name: Run workA
-#        run: |
-#          export DSSAT_HOME="/Applications/DSSAT48/"
-#          cd /Applications/DSSAT48/CTWork/workA
-#          ./dscsm048 B ../../BatchFiles/All.L48
-#
-#      - name: Run workB
-#        run: |
-#          export DSSAT_HOME="/Applications/DSSAT48/"
-#          cd /Applications/DSSAT48/CTWork/workB
-#          ./dscsm048 B ../../BatchFiles/All.L48
+      - name: DSSAT data directory
+        run: |
+          sudo mkdir -p /Applications/DSSAT48/
+          sudo mkdir -p /Applications/DSSAT48/CTWork/workA
+          sudo mkdir -p /Applications/DSSAT48/CTWork/workB
+          sudo chmod -R 777 /Applications/DSSAT48/
+          cp -r dssat-csm-data/* /Applications/DSSAT48/
+          
+      - name: Compile
+        run: |
+          mkdir -p ci-dssat-csm-os/build
+          cd ci-dssat-csm-os/build
+          cmake -DCMAKE_INSTALL_PREFIX=/Applications/DSSAT48/ ..
+          sudo make install
+
+      - name: Copy executable
+        run: |
+          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workA/
+          cp ci-dssat-csm-os/build/bin/dscsm048 /Applications/DSSAT48/CTWork/workB/
+
+      - name: Run workA
+        run: |
+          export DSSAT_HOME="/Applications/DSSAT48/"
+          cd /Applications/DSSAT48/CTWork/workA
+          ./dscsm048 B ../../BatchFiles/All.L48
+
+      - name: Run workB
+        run: |
+          export DSSAT_HOME="/Applications/DSSAT48/"
+          cd /Applications/DSSAT48/CTWork/workB
+          ./dscsm048 B ../../BatchFiles/All.L48
 
  #        PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
  #     - name: CropTest
@@ -66,10 +66,8 @@ jobs:
 
       - name: Configura o ambiente R 
         uses: r-lib/actions/setup-r@v2
- 
 
-#NEW
-       
+#     Added pre-written action to install R packages (TBF - 05/27/2025)     
       - name: Install packages
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -79,12 +77,10 @@ jobs:
             any::webutils
             any::sodium
 
-      - name: Find RCroptest
-        run: |
-          RCROPPATH=$(find . -type d -name RCroptest | head -n 1)
-          echo "Found RCroptest at: $RCROPPATH"
-
-#
+#      - name: Find RCroptest
+#        run: |
+#          RCROPPATH=$(find . -type d -name RCroptest | head -n 1)
+#          echo "Found RCroptest at: $RCROPPATH"
            
       - name: Verify installation
         run: |
