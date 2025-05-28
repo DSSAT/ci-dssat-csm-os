@@ -102,7 +102,7 @@ jobs:
               print(paste('The valor of the result is:', result))
 
            if (result == 0) {
-             print('There are NO differences between the models.'')
+             print('There are NO differences between the models.')
            } else {
              stop('There are differences between the models')
            }"
