@@ -91,9 +91,7 @@ jobs:
         run: |
           export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/
-          ls ./.github/RCroptest
-          ls ci-dssat-csm-os/.github/RCroptest
-          Rscript -e "devtools::load_all('./.github/RCroptest');
+          Rscript -e "devtools::load_all('/home/runner/work/ci-dssat-csm-os/.github/RCroptest')";
               result = testCI('/Applications/DSSAT48/CTWork/workA/Summary.out',
                               '/Applications/DSSAT48/CTWork/workB/Summary.out', 
                               thNumeric=2, thDate=0
