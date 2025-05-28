@@ -76,12 +76,15 @@ jobs:
             any::plumber
             any::webutils
             any::sodium
+            any::dplyr
+            any::readr
+            any::tidyr
 
-      - name: Find RCroptest
-        run: |
-          RCROPPATH=$(find . -type d -name RCroptest | head -n 1)
-          pwd
-          echo "Found RCroptest at: $RCROPPATH"
+#      - name: Find RCroptest
+#        run: |
+#          RCROPPATH=$(find . -type d -name RCroptest | head -n 1)
+#          pwd
+#          echo "Found RCroptest at: $RCROPPATH"
            
       - name: Verify installation
         run: |
