@@ -92,6 +92,9 @@ jobs:
        
       - name: Run RCroptest
         run: |
+          pwd
+          find . -type d -name workA
+          find . -type d -name workB
           export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/
           Rscript -e "
