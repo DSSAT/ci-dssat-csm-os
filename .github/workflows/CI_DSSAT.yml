@@ -3,7 +3,7 @@ name: CI Build e Run DSSAT-CSM test
 on:
   push:
     branches:
-      - make-CropTest-WORK
+      - develop
 
 jobs:
   build-and-run:
@@ -23,7 +23,7 @@ jobs:
 
       - name: Clone Repositories
         run: |
-          git clone -b make-CropTest-WORK https://github.com/thiagoferreira53/ci-dssat-csm-os.git
+          git clone -b develop https://github.com/DSSAT/ci-dssat-csm-os.git
           git clone -b develop https://github.com/DSSAT/dssat-csm-data.git
 
       - name: DSSAT data directory
