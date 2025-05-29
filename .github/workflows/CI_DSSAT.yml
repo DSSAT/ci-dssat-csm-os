@@ -3,7 +3,7 @@ name: CI Build e Run DSSAT-CSM test
 on:
   push:
     branches:
-      - develop
+      - make-CropTest-WORK
 
 jobs:
   build-and-run:
@@ -16,14 +16,14 @@ jobs:
       - name: Checkout 
         uses: actions/checkout@v2
 
-      - name: Install dependencias
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y git ca-certificates gfortran cmake
 
       - name: Clone Repositories
         run: |
-          git clone -b develop https://github.com/DSSAT/ci-dssat-csm-os.git
+          git clone -b make-CropTest-WORK https://github.com/thiagoferreira53/ci-dssat-csm-os.git
           git clone -b develop https://github.com/DSSAT/dssat-csm-data.git
 
       - name: DSSAT data directory
@@ -50,12 +50,14 @@ jobs:
         run: |
           export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/workA
+          pwd
           ./dscsm048 B ../../BatchFiles/All.L48
 
       - name: Run workB
         run: |
           export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/workB
+          pwd
           ./dscsm048 B ../../BatchFiles/All.L48
 
  #        PUT HERE THE CROPTEST LOGIC TO COMPARE FILES.
@@ -66,12 +68,25 @@ jobs:
 
       - name: Configura o ambiente R 
         uses: r-lib/actions/setup-r@v2
-      
-      - name: Install package
+
+#     Added pre-written action to install R packages (TBF - 05/27/2025)     
+      - name: Install packages
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::devtools 
+            any::plumber
+            any::webutils
+            any::sodium
+            any::dplyr
+            any::readr
+            any::tidyr
+
+      - name: Find RCroptest
         run: |
-           Rscript -e "repos <- c('https://marcionicolau.github.io/RCroptestDeps', 'https://cloud.r-project.org'); options(repos = c(CRAN = repos)); install.packages('RCroptest', dependencies = TRUE)"
-           Rscript -e "install.packages('plumber')" 
-           Rscript - e "install.packages(c('webutils', 'sodium'))"
+          RCROPPATH=$(find . -type d -name RCroptest | head -n 1)
+          pwd
+          echo "Found RCroptest at: $RCROPPATH"
            
       - name: Verify installation
         run: |
@@ -81,15 +96,15 @@ jobs:
         run: |
           export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/
-          Rscript -e "library(RCroptest);
-              result = testCI('/Applications/DSSAT48/CTWork/workA/Summary.out',
-                              '/Applications/DSSAT48/CTWork/workB/Summary.out', 
-                              thNumeric=2, thDate=0
-                             );
-              print(paste("The valor of the result is:", result))
+          Rscript -e "
+              devtools::load_all('/home/runner/work/ci-dssat-csm-os/ci-dssat-csm-os/.github/RCroptest');
+              result <- testCI('/Applications/DSSAT48/CTWork/workA/Summary.OUT',
+                              '/Applications/DSSAT48/CTWork/workB/Summary.OUT', 
+                              thNumeric=2, thDate=0);
+              print(paste('The valor of the result is:', result))
 
            if (result == 0) {
-             print("There are NO differences between the models.")
+             print('There are NO differences between the models.')
            } else {
              stop('There are differences between the models')
            }"
