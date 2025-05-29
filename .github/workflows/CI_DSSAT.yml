@@ -87,10 +87,10 @@ jobs:
           echo "Found RCroptest at: $RCROPPATH"
           
           echo "Searching for 'workA' directory:"
-          find . -type d -name workA || echo " workA not found."
+          find / -type d -name "WorkA"
 
           echo "Searching for 'workB' directory:"
-          find . -type d -name workB || echo "workB not found."
+          find / -type d -name "WorkB"
            
       - name: Verify installation
         run: |
