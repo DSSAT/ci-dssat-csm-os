@@ -80,11 +80,13 @@ jobs:
             any::readr
             any::tidyr
 
-#      - name: Find RCroptest
-#        run: |
-#          RCROPPATH=$(find . -type d -name RCroptest | head -n 1)
-#          pwd
-#          echo "Found RCroptest at: $RCROPPATH"
+      - name: Find RCroptest
+        run: |
+          RCROPPATH=$(find . -type d -name RCroptest | head -n 1)
+          pwd
+          echo "Found RCroptest at: $RCROPPATH"
+          find . -type d -name workA
+          find . -type d -name workB
            
       - name: Verify installation
         run: |
@@ -92,15 +94,12 @@ jobs:
        
       - name: Run RCroptest
         run: |
-          pwd
-          find . -type d -name workA
-          find . -type d -name workB
           export DSSAT_HOME="/Applications/DSSAT48/"
           cd /Applications/DSSAT48/CTWork/
           Rscript -e "
               devtools::load_all('/home/runner/work/ci-dssat-csm-os/ci-dssat-csm-os/.github/RCroptest');
-              result <- testCI('/Applications/DSSAT48/CTWork/workA/Summary.out',
-                              '/Applications/DSSAT48/CTWork/workB/Summary.out', 
+              result <- testCI('./workA/Summary.out',
+                              './workB/Summary.out', 
                               thNumeric=2, thDate=0);
               print(paste('The valor of the result is:', result))
 
