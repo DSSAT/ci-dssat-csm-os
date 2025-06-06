@@ -1,11 +1,10 @@
 name: CI Build e Run DSSAT-CSM test
    
 on:
-  push:
+  pull_request: 
     branches:
-      - develop
-
-jobs:
+      - '**'  
+ jobs:
   build-and-run:
     runs-on: ubuntu-latest
 
@@ -20,6 +19,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y git ca-certificates gfortran cmake
+      
+      - name: Display branch name
+        run: echo "Branch: ${{ github.event.pull_request.head.ref }}"
+    
+      - name: Clone specific branch
+        run: git clone --branch ${{ github.event.pull_request.head.ref }} https://github.com/${{ github.repository }}.git repo && cd repo
 
       - name: Clone Repositories
         run: |
