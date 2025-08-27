@@ -19,10 +19,10 @@ PROJECT(DSSAT-CSM Fortran)
 # DSSAT_VERSION
 ##########################################################################################
 
-SET(MAJOR 4)
-SET(MINOR 8)
-SET(MODEL 2)
-SET(BUILD 24)
+SET(MAJOR 1)
+SET(MINOR 1)
+SET(MODEL 1)
+SET(BUILD 1)
 
 # Get the current working branch
 execute_process(
